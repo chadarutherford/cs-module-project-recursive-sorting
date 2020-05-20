@@ -1,53 +1,49 @@
 # TO-DO: complete the helper function below to merge 2 sorted arrays
-def merge(arrA, arrB):
-    elements = len(arrA) + len(arrB)
-    # creating an empty array in memory for storage
-    merged_arr = [0] * elements
-    # compare first elements
+def merge(left, right):
+    # init the combined list
+    # that will hold the sorted elements from left and right
+    combined = []
+
+    #init the pointers that start at the beginning of each list
     a = 0
     b = 0
 
-    # loop through all the elements
-    for i in range(0, elements):
-        # if a is greater than the length of the first half of the split array
-        if a >= len(arrA):
-            # set the merged array's i'th index equal to the b'th index in array B
-            merged_arr[i] = arrB[b]
-            # increment B
-            b += 1
-        elif b >= len(arrB):
-            # set the merged array's i'th index equal to the a'th index in array A
-            merged_arr[i] = arrA[a]
-            # increment A
-            a += 1
-        elif arrA[a] < arrB[b]:
-            # set the merged array's i'th index equal to the a'th index in array A
-            merged_arr[i] = arrA[a]
-            # increment A
+    # traverse the lists
+    while a < len(left) and b < len(right):
+        # compare elements from pointers
+        if left[a] < right[b]:
+            combined.append(left[a])
             a += 1
         else:
-            # set the merged array's i'th index equal to the b'th index in array B
-            merged_arr[i] = arrB[b]
-            # increment B
+            combined.append(right[b])
             b += 1
 
-    return merged_arr
+    # at this point, we have finished traversing one list completely
+    # we need to add all of the elements from the other list to the combined list
+    while a < len(left):
+        combined.append(left[a])
+        a += 1
+    while b < len(right):
+        combined.append(right[b])
+        b += 1
 
+    return combined
 
 # TO-DO: implement the Merge Sort function below USING RECURSION
 def merge_sort(arr):
-    if len(arr) <= 1:
-        return arr
+    # break the array down recursively
+    # base case: when the list gets down to single elements
+    if len(arr) > 1:
+        # break down array halves until they reach the point
+        # where we have arrays of single elements
+        left = merge_sort(arr[:len(arr) // 2])
+        right = merge_sort(arr[len(arr) // 2:])
+
+        # merge them back up
+        arr = merge(left, right)
+
+    return arr
     
-    left = arr[:len(arr) // 2]
-    right = arr[len(arr) // 2:]
-
-    left = merge_sort(left)
-    right = merge_sort(right)
-
-    return merge(left, right)
-
-
 # implement an in-place merge sort algorithm
 def merge_in_place(arr, start, mid, end):
     # make copies of both arrays that we are trying to merge
